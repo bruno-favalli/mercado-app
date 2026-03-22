@@ -28,7 +28,12 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
+              }
             ],
             "styles": [
               "src/styles.scss"
