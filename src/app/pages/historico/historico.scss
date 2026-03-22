@@ -1,0 +1,131 @@
+.page-container {
+    width: 100%;
+    padding: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding-bottom: 32px;
+  }
+  
+  .page-header {
+    padding: 16px 0;
+  }
+  
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+  }
+  
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 16px;
+    gap: 16px;
+    color: #aaa;
+    text-align: center;
+  
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+    }
+  
+    p {
+      font-size: 1rem;
+      color: #888;
+    }
+  }
+  
+  .btn-primary {
+    height: 48px;
+    background-color: #2e7d32 !important;
+    color: white !important;
+    font-size: 1rem;
+  
+    mat-icon { margin-right: 8px; }
+  }
+  
+  .compra-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  
+  .compra-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .compra-mercado {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a1a1a;
+  
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: #2e7d32;
+    }
+  }
+  
+  .compra-total {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #2e7d32;
+  }
+  
+  .compra-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .produtos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .produto-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+  }
+  
+  .produto-nome {
+    flex: 1;
+    color: #444;
+  }
+  
+  .produto-qtd {
+    color: #888;
+    min-width: 24px;
+  }
+  
+  .produto-valor {
+    color: #1a1a1a;
+    font-weight: 500;
+    min-width: 80px;
+    text-align: right;
+  }

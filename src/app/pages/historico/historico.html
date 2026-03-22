@@ -1,0 +1,51 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-top">
+      <button mat-icon-button (click)="voltar()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Histórico</h1>
+      <div style="width: 40px"></div>
+    </div>
+  </header>
+
+  @if (historico().length === 0) {
+  <div class="empty-state">
+    <mat-icon>receipt_long</mat-icon>
+    <p>Nenhuma compra finalizada ainda.</p>
+    <button mat-flat-button class="btn-primary" (click)="novaCompra()">
+      <mat-icon>add_shopping_cart</mat-icon>
+      Fazer primeira compra
+    </button>
+  </div>
+  } @for (compra of historico(); track compra.id) {
+  <div class="compra-card">
+    <div class="compra-header">
+      <div class="compra-mercado">
+        <mat-icon>store</mat-icon>
+        <span>{{ compra.mercado }}</span>
+      </div>
+      <span class="compra-total">
+        {{ calcularTotal(compra) | currency : 'BRL' }}
+      </span>
+    </div>
+
+    <div class="compra-meta">
+      <span>{{ compra.dataFim | date : 'dd/MM/yyyy - HH:mm' }}</span>
+      <span>{{ compra.produtos.length }} produto(s)</span>
+    </div>
+
+    <div class="produtos-lista">
+      @for (produto of compra.produtos; track produto.id) {
+      <div class="produto-row">
+        <span class="produto-nome">{{ produto.nome }}</span>
+        <span class="produto-qtd">{{ produto.quantidade }}x</span>
+        <span class="produto-valor">
+          {{ produto.quantidade * produto.valorUnitario | currency : 'BRL' }}
+        </span>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,31 @@
+<div class="page-container">
+  <header class="home-header">
+    <mat-icon class="logo-icon">shopping_cart</mat-icon>
+    <h1 class="app-title">Meu Mercado</h1>
+    <p class="app-subtitle">Controle suas compras com facilidade</p>
+  </header>
+
+  <main class="home-main">
+    @if (compraService.temCompraAtiva()) {
+    <div class="compra-ativa-aviso">
+      <mat-icon>info_outline</mat-icon>
+      <div>
+        <strong>Compra em andamento</strong>
+        <p>Você tem uma compra ativa no {{ compraService.getCompraAtiva()()?.mercado }}</p>
+      </div>
+    </div>
+    }
+
+    <button mat-flat-button class="btn-nova-compra" (click)="novaCompra()">
+      <mat-icon>{{
+        compraService.temCompraAtiva() ? 'shopping_cart' : 'add_shopping_cart'
+      }}</mat-icon>
+      {{ compraService.temCompraAtiva() ? 'Continuar Compra' : 'Nova Compra' }}
+    </button>
+
+    <button mat-stroked-button class="btn-historico" (click)="verHistorico()">
+      <mat-icon>history</mat-icon>
+      Ver Histórico
+    </button>
+  </main>
+</div>

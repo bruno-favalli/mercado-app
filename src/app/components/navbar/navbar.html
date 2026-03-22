@@ -1,0 +1,28 @@
+<nav class="navbar">
+  <button class="nav-item" matRipple [class.ativo]="isAtivo('/')" (click)="navegar('/')">
+    <mat-icon>home</mat-icon>
+    <span>Início</span>
+  </button>
+
+  <button
+    class="nav-item nav-item--compra"
+    matRipple
+    [class.ativo]="isAtivo('/compra')"
+    (click)="navegar('/compra')"
+  >
+    <div class="compra-btn-inner">
+      <mat-icon>add_shopping_cart</mat-icon>
+    </div>
+    <span>Compra</span>
+  </button>
+
+  <button
+    class="nav-item"
+    matRipple
+    [class.ativo]="isAtivo('/historico')"
+    (click)="navegar('/historico')"
+  >
+    <mat-icon>history</mat-icon>
+    <span>Histórico</span>
+  </button>
+</nav>

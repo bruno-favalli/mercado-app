@@ -1,0 +1,35 @@
+.dialogo {
+    padding: 8px 8px 0;
+    max-width: 320px;
+  }
+  
+  .dialogo-titulo {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  
+  .dialogo-mensagem {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  
+  .dialogo-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .btn-primary {
+    background-color: #1565c0 !important;
+    color: white !important;
+  }
+  
+  .btn-warn {
+    background-color: #c62828 !important;
+    color: white !important;
+  }
