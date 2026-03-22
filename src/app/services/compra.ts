@@ -3,6 +3,8 @@ import { Compra, Produto } from '../models/compra.model';
 
 const STORAGE_KEY = 'mercado_historico';
 
+const STORAGE_VERSION = 'v1';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -86,10 +88,18 @@ export class CompraService {
     this.compraAtiva.set(null);
   }
 
+  removerDoHistorico(compraId: string): void {
+    // filter() cria nova lista excluindo a compra com o id informado
+    // O effect() salva automaticamente no localStorage
+    this.historico.update(h => h.filter(c => c.id !== compraId));
+  }
   // localStorage
   private salvarHistorico(historico: Compra[]): void {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(historico));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        version: STORAGE_VERSION, // Salva a versão junto com os dados
+        dados: historico
+      }));
     } catch (error) {
       console.error('Erro ao salvar histórico:', error);
     }
@@ -97,21 +107,30 @@ export class CompraService {
 
   private carregarHistorico(): Compra[] {
     try {
-      const dados = localStorage.getItem(STORAGE_KEY);
-      if (!dados) return [];
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return []; // Primeira vez — retorna vazio
 
-      const historico = JSON.parse(dados) as Compra[];
+      const parsed = JSON.parse(raw);
 
-      // Reconverte strings de volta para Date
-      return historico.map(compra => ({
+      // Verificação de versão — se dados são de versão antiga,
+      // descarta para evitar erros de estrutura incompatível
+      if (!parsed.version || parsed.version !== STORAGE_VERSION) {
+        localStorage.removeItem(STORAGE_KEY);
+        return [];
+      }
+
+      // JSON.parse converte Date para string — precisamos reconverter
+      // map() percorre cada compra e recria os objetos Date corretamente
+      return parsed.dados.map((compra: Compra) => ({
         ...compra,
         dataInicio: new Date(compra.dataInicio),
+        // dataFim é opcional — só converte se existir
         dataFim: compra.dataFim ? new Date(compra.dataFim) : undefined
       }));
 
     } catch (error) {
       console.error('Erro ao carregar histórico:', error);
-      return [];
+      return []; // Em caso de erro, começa com histórico vazio
     }
   }
 }

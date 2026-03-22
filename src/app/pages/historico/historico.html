@@ -1,14 +1,18 @@
+<!-- Tela de histórico de compras finalizadas -->
 <div class="page-container">
   <header class="page-header">
     <div class="header-top">
+      <!-- Botão voltar — navega para home -->
       <button mat-icon-button (click)="voltar()">
         <mat-icon>arrow_back</mat-icon>
       </button>
       <h1>Histórico</h1>
+      <!-- Espaço vazio para centralizar o título -->
       <div style="width: 40px"></div>
     </div>
   </header>
 
+  <!-- Estado vazio — exibido quando não há compras finalizadas -->
   @if (historico().length === 0) {
   <div class="empty-state">
     <mat-icon>receipt_long</mat-icon>
@@ -18,30 +22,48 @@
       Fazer primeira compra
     </button>
   </div>
-  } @for (compra of historico(); track compra.id) {
+  }
+
+  <!-- Lista de compras — @for itera sobre o histórico -->
+  <!-- track compra.id diz ao Angular como identificar cada item -->
+  <!-- para otimizar a re-renderização quando a lista muda -->
+  @for (compra of historico(); track compra.id) {
   <div class="compra-card">
     <div class="compra-header">
       <div class="compra-mercado">
         <mat-icon>store</mat-icon>
         <span>{{ compra.mercado }}</span>
       </div>
-      <span class="compra-total">
-        {{ calcularTotal(compra) | currency : 'BRL' }}
-      </span>
+      <div class="compra-header-right">
+        <span class="compra-total">
+          {{ calcularTotal(compra) | currency : 'BRL' }}
+        </span>
+        <!-- Botão deletar — abre diálogo de confirmação -->
+        <button
+          mat-icon-button
+          class="btn-deletar"
+          (click)="deletarCompra(compra)"
+          title="Deletar compra"
+        >
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </div>
     </div>
 
+    <!-- Metadados da compra: data e quantidade de produtos -->
     <div class="compra-meta">
       <span>{{ compra.dataFim | date : 'dd/MM/yyyy - HH:mm' }}</span>
       <span>{{ compra.produtos.length }} produto(s)</span>
     </div>
 
+    <!-- Lista de produtos da compra -->
     <div class="produtos-lista">
       @for (produto of compra.produtos; track produto.id) {
       <div class="produto-row">
         <span class="produto-nome">{{ produto.nome }}</span>
         <span class="produto-qtd">{{ produto.quantidade }}x</span>
         <span class="produto-valor">
-          {{ produto.quantidade * produto.valorUnitario | currency : 'BRL' }}
+          {{ calcularSubtotal(produto) | currency : 'BRL' }}
         </span>
       </div>
       }

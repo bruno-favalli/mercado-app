@@ -45,7 +45,7 @@
   }
   
   .btn-primary {
-    height: 48px;
+    height: 60px;
     background-color: #2e7d32 !important;
     color: white !important;
     font-size: 1rem;
@@ -128,4 +128,19 @@
     font-weight: 500;
     min-width: 80px;
     text-align: right;
+  }
+  .compra-header-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .btn-deletar {
+    color: #e53935;
+    opacity: 0.7;
+    transition: opacity .2s;
+  
+    &:hover {
+      opacity: 1;
+    }
   }
