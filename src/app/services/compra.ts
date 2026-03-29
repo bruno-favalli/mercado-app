@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
 import { Compra, Produto } from '../models/compra.model';
+import { ALIMENTOS } from '../data/alimentos.data';
 
 const STORAGE_KEY = 'mercado_historico';
 
@@ -15,6 +16,30 @@ export class CompraService {
       this.salvarHistorico(this.historico());
     });
   }
+
+  // Retorna sugestões de autocomplete combinando duas fontes:
+// 1. Lista fixa de alimentos comuns
+// 2. Produtos já comprados no histórico (aprendizado do usuário)
+// Remove duplicatas e filtra pelo texto digitado
+getSugestoes(termo: string): string[] {
+  if (!termo || termo.length < 2) return [];
+
+  const termoLower = termo.toLowerCase();
+
+  // Extrai nomes únicos de produtos do histórico
+  const doHistorico = this.historico()
+    .flatMap(compra => compra.produtos.map(p => p.nome))
+    // Set remove duplicatas — cada nome aparece só uma vez
+    .filter((nome, index, self) => self.indexOf(nome) === index);
+
+  // Junta histórico + lista fixa, remove duplicatas entre as duas fontes
+  const todasSugestoes = [...new Set([...doHistorico, ...ALIMENTOS])];
+
+  // Filtra pelo termo digitado e limita a 6 sugestões
+  return todasSugestoes
+    .filter(nome => nome.toLowerCase().includes(termoLower))
+    .slice(0, 6);
+}
 
   private compraAtiva = signal<Compra | null>(null);
   private historico = signal<Compra[]>(this.carregarHistorico());

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -45,6 +45,19 @@ export class CompraAtiva {
     quantidade: [1, [Validators.required, Validators.min(1)]],
     valorUnitario: [null, [Validators.required, Validators.min(0.01)]]
   });
+
+  sugestoes = signal<string[]>([]);
+  onNomeInput(evento: Event): void {
+    const valor = (evento.target as HTMLInputElement).value;
+    this.sugestoes.set(this.compraService.getSugestoes(valor));
+  }
+  
+  // Chamado quando o usuário seleciona uma sugestão
+  // Preenche o campo e limpa as sugestões
+  selecionarSugestao(sugestao: string): void {
+    this.formProduto.patchValue({ nome: sugestao });
+    this.sugestoes.set([]);
+  }
 
   iniciarCompra(): void {
     if (this.formMercado.invalid) return;

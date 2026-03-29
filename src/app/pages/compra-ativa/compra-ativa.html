@@ -46,14 +46,35 @@
 
   <!-- Formulário de produto -->
   <form class="form-card" [formGroup]="formProduto" (ngSubmit)="adicionarProduto()">
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Nome do produto</mat-label>
-      <mat-icon matPrefix>inventory_2</mat-icon>
-      <input matInput formControlName="nome" placeholder="Ex: Arroz 5kg" />
-      @if (formProduto.get('nome')?.hasError('required') && formProduto.get('nome')?.touched) {
-      <mat-error>Informe o nome do produto</mat-error>
+    <!-- Campo nome com autocomplete -->
+    <div class="autocomplete-wrapper">
+      <mat-form-field appearance="outline" class="field-full">
+        <mat-label>Nome do produto</mat-label>
+        <mat-icon matPrefix>inventory_2</mat-icon>
+        <input
+          matInput
+          formControlName="nome"
+          placeholder="Ex: Arroz 5kg"
+          (input)="onNomeInput($event)"
+          autocomplete="off"
+        />
+        @if (formProduto.get('nome')?.hasError('required') && formProduto.get('nome')?.touched) {
+        <mat-error>Informe o nome do produto</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Lista de sugestões — aparece apenas quando há sugestões -->
+      @if (sugestoes().length > 0) {
+      <div class="sugestoes-lista">
+        @for (sugestao of sugestoes(); track sugestao) {
+        <button type="button" class="sugestao-item" (click)="selecionarSugestao(sugestao)">
+          <mat-icon>search</mat-icon>
+          {{ sugestao }}
+        </button>
+        }
+      </div>
       }
-    </mat-form-field>
+    </div>
 
     <div class="form-row">
       <mat-form-field appearance="outline" class="field-half">
