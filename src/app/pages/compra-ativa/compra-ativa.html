@@ -7,6 +7,23 @@
     <p>Informe o mercado para começar</p>
   </header>
 
+  <!-- Atalhos de mercados favoritos -->
+  <section class="favoritos-section">
+    <span class="favoritos-label">Acesso rápido</span>
+    <div class="favoritos-grid">
+      @for (mercado of mercadosFavoritos; track mercado) {
+      <button class="favorito-card" type="button" (click)="iniciarCompraDireta(mercado)">
+        <mat-icon>store</mat-icon>
+        <span>{{ mercado }}</span>
+      </button>
+      }
+    </div>
+  </section>
+
+  <div class="ou-divider">
+    <span>ou digite outro mercado</span>
+  </div>
+
   <form class="form-card" [formGroup]="formMercado" (ngSubmit)="iniciarCompra()">
     <mat-form-field appearance="outline" class="field-full">
       <mat-label>Nome do mercado</mat-label>

@@ -33,6 +33,7 @@ export class CompraAtiva {
   private dialog = inject(MatDialog);
   compraService = inject(CompraService);
 
+  mercadosFavoritos = ['Tauste', 'Assaí', 'Shibatta', 'Carrefour', 'Nagumo', 'Semmar'];
   compraAtiva = this.compraService.getCompraAtiva();
   total = this.compraService.totalCompraAtiva;
 
@@ -57,6 +58,10 @@ export class CompraAtiva {
   selecionarSugestao(sugestao: string): void {
     this.formProduto.patchValue({ nome: sugestao });
     this.sugestoes.set([]);
+  }
+
+  iniciarCompraDireta(mercado: string): void {
+    this.compraService.iniciarCompra(mercado);
   }
 
   iniciarCompra(): void {
