@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { CurrencyPipe } from '@angular/common';
 import { CompraService } from '../../services/compra';
 import { DialogoConfirmacaoComponent } from '../../components/dialogo-confirmacao/dialogo-confirmacao';
+import { FormProduto } from '../../components/form-produto/form-produto';
+import { Produto } from '../../models/compra.model';
 
 @Component({
   selector: 'app-compra-ativa',
@@ -21,7 +23,8 @@ import { DialogoConfirmacaoComponent } from '../../components/dialogo-confirmaca
     MatFormFieldModule,
     MatIconModule,
     MatDividerModule,
-    CurrencyPipe
+    CurrencyPipe,
+    FormProduto,
   ],
   templateUrl: './compra-ativa.html',
   styleUrl: './compra-ativa.scss'
@@ -37,28 +40,13 @@ export class CompraAtiva {
   compraAtiva = this.compraService.getCompraAtiva();
   total = this.compraService.totalCompraAtiva;
 
+  // Signal que guarda qual produto está sendo editado no momento
+  // null = modo "adicionar", Produto = modo "editar"
+  produtoEditando = signal<Produto | null>(null);
+
   formMercado: FormGroup = this.fb.group({
     mercado: ['', [Validators.required, Validators.minLength(3)]]
   });
-
-  formProduto: FormGroup = this.fb.group({
-    nome: ['', [Validators.required, Validators.minLength(2)]],
-    quantidade: [1, [Validators.required, Validators.min(1)]],
-    valorUnitario: [null, [Validators.required, Validators.min(0.01)]]
-  });
-
-  sugestoes = signal<string[]>([]);
-  onNomeInput(evento: Event): void {
-    const valor = (evento.target as HTMLInputElement).value;
-    this.sugestoes.set(this.compraService.getSugestoes(valor));
-  }
-  
-  // Chamado quando o usuário seleciona uma sugestão
-  // Preenche o campo e limpa as sugestões
-  selecionarSugestao(sugestao: string): void {
-    this.formProduto.patchValue({ nome: sugestao });
-    this.sugestoes.set([]);
-  }
 
   iniciarCompraDireta(mercado: string): void {
     this.compraService.iniciarCompra(mercado);
@@ -71,18 +59,38 @@ export class CompraAtiva {
     this.formMercado.reset();
   }
 
-  adicionarProduto(): void {
-    if (this.formProduto.invalid) return;
-    const { nome, quantidade, valorUnitario } = this.formProduto.value;
-    this.compraService.adicionarProduto({
-      nome,
-      quantidade: Number(quantidade),
-      valorUnitario: Number(valorUnitario)
-    });
-    this.formProduto.reset({ quantidade: 1 });
+  // Recebe o evento (salvo) do form-produto
+  // O tipo do parâmetro é Omit<Produto, 'id'> — sem o id, pois é novo ou já existe
+  onSalvo(dados: Omit<Produto, 'id'>): void {
+    const editando = this.produtoEditando();
+
+    if (editando) {
+      // Modo edição: atualiza o produto existente pelo id
+      this.compraService.editarProduto(editando.id, dados);
+      this.produtoEditando.set(null); // sai do modo edição
+    } else {
+      // Modo adição: cria produto novo
+      this.compraService.adicionarProduto(dados);
+    }
+  }
+
+  // Ativado pelo botão de editar no card do produto
+  iniciarEdicao(produto: Produto): void {
+    this.produtoEditando.set(produto);
+    // Rola para o topo para o usuário ver o formulário preenchido
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Recebe o evento (cancelado) do form-produto
+  onCancelado(): void {
+    this.produtoEditando.set(null);
   }
 
   removerProduto(id: string): void {
+    // Se estava editando este produto, cancela a edição primeiro
+    if (this.produtoEditando()?.id === id) {
+      this.produtoEditando.set(null);
+    }
     this.compraService.removerProduto(id);
   }
 

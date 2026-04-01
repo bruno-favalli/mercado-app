@@ -95,6 +95,16 @@ getSugestoes(termo: string): string[] {
     }));
   }
 
+  editarProduto(produtoId: string, dados: Omit<Produto, 'id'>): void {
+    // map() percorre o array e retorna um novo array
+    // Para o produto com o id certo, substitui os dados mantendo o mesmo id
+    // Para os outros, retorna sem mudança
+    this.compraAtiva.update(c => ({
+      ...c!,
+      produtos: c!.produtos.map(p => p.id === produtoId ? { ...p, ...dados } : p)
+    }));
+  }
+
   finalizarCompra(): void {
     const compra = this.compraAtiva();
     if (!compra) return;

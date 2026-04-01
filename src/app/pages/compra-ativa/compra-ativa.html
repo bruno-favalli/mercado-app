@@ -61,70 +61,15 @@
     </div>
   </header>
 
-  <!-- Formulário de produto -->
-  <form class="form-card" [formGroup]="formProduto" (ngSubmit)="adicionarProduto()">
-    <!-- Campo nome com autocomplete -->
-    <div class="autocomplete-wrapper">
-      <mat-form-field appearance="outline" class="field-full">
-        <mat-label>Nome do produto</mat-label>
-        <mat-icon matPrefix>inventory_2</mat-icon>
-        <input
-          matInput
-          formControlName="nome"
-          placeholder="Ex: Arroz 5kg"
-          (input)="onNomeInput($event)"
-          autocomplete="off"
-        />
-        @if (formProduto.get('nome')?.hasError('required') && formProduto.get('nome')?.touched) {
-        <mat-error>Informe o nome do produto</mat-error>
-        }
-      </mat-form-field>
-
-      <!-- Lista de sugestões — aparece apenas quando há sugestões -->
-      @if (sugestoes().length > 0) {
-      <div class="sugestoes-lista">
-        @for (sugestao of sugestoes(); track sugestao) {
-        <button type="button" class="sugestao-item" (click)="selecionarSugestao(sugestao)">
-          <mat-icon>search</mat-icon>
-          {{ sugestao }}
-        </button>
-        }
-      </div>
-      }
-    </div>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline" class="field-half">
-        <mat-label>Quantidade</mat-label>
-        <input matInput type="number" formControlName="quantidade" min="1" />
-        @if (formProduto.get('quantidade')?.hasError('min') &&
-        formProduto.get('quantidade')?.touched) {
-        <mat-error>Mínimo 1</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="field-half">
-        <mat-label>Valor unitário</mat-label>
-        <mat-icon matPrefix>attach_money</mat-icon>
-        <input
-          matInput
-          type="number"
-          formControlName="valorUnitario"
-          placeholder="0,00"
-          step="0.01"
-        />
-        @if (formProduto.get('valorUnitario')?.hasError('min') &&
-        formProduto.get('valorUnitario')?.touched) {
-        <mat-error>Valor inválido</mat-error>
-        }
-      </mat-form-field>
-    </div>
-
-    <button mat-flat-button type="submit" class="btn-primary" [disabled]="formProduto.invalid">
-      <mat-icon>add</mat-icon>
-      Adicionar Produto
-    </button>
-  </form>
+  <!-- Formulário de produto — componente reutilizável -->
+  <!-- [produtoEditando]: passa o produto a editar (null = modo adicionar) -->
+  <!-- (salvo): escuta o evento de salvar vindo do filho -->
+  <!-- (cancelado): escuta o evento de cancelar vindo do filho -->
+  <app-form-produto
+    [produtoEditando]="produtoEditando()"
+    (salvo)="onSalvo($event)"
+    (cancelado)="onCancelado()"
+  />
 
   <mat-divider />
 
@@ -147,7 +92,10 @@
         <span class="produto-total">
           {{ calcularSubtotal(produto.quantidade, produto.valorUnitario) | currency : 'BRL' }}
         </span>
-        <button mat-icon-button (click)="removerProduto(produto.id)">
+        <button mat-icon-button (click)="iniciarEdicao(produto)" title="Editar produto">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="removerProduto(produto.id)" title="Remover produto">
           <mat-icon>delete_outline</mat-icon>
         </button>
       </div>
