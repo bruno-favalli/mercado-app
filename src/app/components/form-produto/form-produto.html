@@ -37,7 +37,7 @@
   <div class="form-row">
     <mat-form-field appearance="outline" class="field-half">
       <mat-label>Quantidade</mat-label>
-      <input matInput type="number" formControlName="quantidade" min="1" />
+      <input matInput type="number" formControlName="quantidade" min="1" inputmode="numeric" />
       @if (form.get('quantidade')?.hasError('min') && form.get('quantidade')?.touched) {
       <mat-error>Mínimo 1</mat-error>
       }
@@ -50,6 +50,7 @@
         currencyMask
         formControlName="valorUnitario"
         placeholder="R$ 0,00"
+        inputmode="numeric"
       />
       @if (form.get('valorUnitario')?.hasError('min') && form.get('valorUnitario')?.touched) {
       <mat-error>Valor inválido</mat-error>
