@@ -12,7 +12,7 @@
   <mat-form-field appearance="outline" class="field-full orcamento-field">
     <mat-label>Orçamento (opcional)</mat-label>
     <mat-icon matPrefix>savings</mat-icon>
-    <input matInput type="number" [formControl]="orcamentoControl" placeholder="0,00" step="0.01" />
+    <input matInput currencyMask [formControl]="orcamentoControl" placeholder="R$ 0,00" />
     @if (orcamentoControl.hasError('min') && orcamentoControl.touched) {
     <mat-error>Valor inválido</mat-error>
     }

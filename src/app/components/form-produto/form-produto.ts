@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { signal } from '@angular/core';
+import { NgxCurrencyDirective } from 'ngx-currency';
 import { CompraService } from '../../services/compra';
 import { Produto } from '../../models/compra.model';
 
@@ -21,7 +22,8 @@ import { Produto } from '../../models/compra.model';
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
-    MatIconModule
+    MatIconModule,
+    NgxCurrencyDirective,
   ],
   templateUrl: './form-produto.html',
   styleUrl: './form-produto.scss'

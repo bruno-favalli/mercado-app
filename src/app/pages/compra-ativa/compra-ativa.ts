@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NgxCurrencyDirective } from 'ngx-currency';
 import { MatDialog } from '@angular/material/dialog';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { CompraService } from '../../services/compra';
@@ -29,6 +30,7 @@ import { Produto } from '../../models/compra.model';
     DecimalPipe,
     FormProduto,
     MatProgressBarModule,
+    NgxCurrencyDirective,
   ],
   templateUrl: './compra-ativa.html',
   styleUrl: './compra-ativa.scss'
@@ -59,7 +61,8 @@ export class CompraAtiva {
   produtoEditando = signal<Produto | null>(null);
 
   // FormControl independente — compartilhado entre atalhos e formulário
-  orcamentoControl = new FormControl<number | null>(null, [Validators.min(0.01)]);
+  // nullable: true na config global garante que campo vazio = null, não zero
+  orcamentoControl = new FormControl<number | null>(null);
 
   formMercado: FormGroup = this.fb.group({
     mercado: ['', [Validators.required, Validators.minLength(3)]]

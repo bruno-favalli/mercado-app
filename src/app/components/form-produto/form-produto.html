@@ -45,13 +45,11 @@
 
     <mat-form-field appearance="outline" class="field-half">
       <mat-label>Valor unitário</mat-label>
-      <mat-icon matPrefix>attach_money</mat-icon>
       <input
         matInput
-        type="number"
+        currencyMask
         formControlName="valorUnitario"
-        placeholder="0,00"
-        step="0.01"
+        placeholder="R$ 0,00"
       />
       @if (form.get('valorUnitario')?.hasError('min') && form.get('valorUnitario')?.touched) {
       <mat-error>Valor inválido</mat-error>
