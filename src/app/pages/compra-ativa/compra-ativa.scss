@@ -149,16 +149,77 @@
     align-items: center;
     margin-bottom: 12px;
   }
-  
+
   .total-label {
     font-size: 1rem;
     color: #666;
   }
-  
+
   .total-valor {
     font-size: 1.4rem;
     font-weight: 500;
     color: #2e7d32;
+  }
+
+  .orcamento-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  .orcamento-valores {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+
+  .orcamento-de {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #888;
+    margin-left: 4px;
+  }
+
+  .orcamento-percentual {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1565c0;
+
+    // classe aplicada via [class.acima-do-orcamento] no template
+    &.acima-do-orcamento {
+      color: #c62828;
+    }
+  }
+
+  .orcamento-barra {
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .orcamento-restante {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    color: #555;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #2e7d32;
+    }
+
+    .icone-alerta {
+      color: #c62828;
+    }
+
+    .acima-do-orcamento {
+      color: #c62828;
+      font-weight: 500;
+    }
   }
   
   .btn-finalizar {
@@ -219,6 +280,11 @@
       background: #f5f5f5;
     }
   }
+  .orcamento-field {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
   .favoritos-section {
     margin-bottom: 8px;
   }

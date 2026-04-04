@@ -54,6 +54,16 @@ getSugestoes(termo: string): string[] {
 
   readonly temCompraAtiva = computed(() => this.compraAtiva() !== null);
 
+  // Retorna o percentual gasto do orçamento (0–100+)
+  // null quando a compra não tem orçamento definido
+  // Depende de dois signals: compraAtiva e totalCompraAtiva
+  // O Angular rastreia ambas as dependências automaticamente
+  readonly percentualOrcamento = computed(() => {
+    const compra = this.compraAtiva();
+    if (!compra?.orcamento) return null;
+    return (this.totalCompraAtiva() / compra.orcamento) * 100;
+  });
+
   getCompraAtiva() {
     return this.compraAtiva.asReadonly();
   }
@@ -62,10 +72,11 @@ getSugestoes(termo: string): string[] {
     return this.historico.asReadonly();
   }
 
-  iniciarCompra(mercado: string): void {
+  iniciarCompra(mercado: string, orcamento?: number): void {
     const novaCompra: Compra = {
       id: crypto.randomUUID(),
       mercado,
+      orcamento,
       dataInicio: new Date(),
       produtos: [],
       status: 'ativa'

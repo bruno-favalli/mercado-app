@@ -8,6 +8,7 @@ export interface Produto{
 export interface Compra{
     id: string;
     mercado: string;
+    orcamento?: number; // opcional — compra sem orçamento é válida
     dataInicio: Date;
     dataFim?: Date;
     produtos: Produto[];

@@ -7,6 +7,17 @@
     <p>Informe o mercado para começar</p>
   </header>
 
+  <!-- Campo de orçamento — fora dos forms, compartilhado entre atalhos e formulário -->
+  <!-- [formControl] vincula um FormControl independente, sem precisar de formGroup -->
+  <mat-form-field appearance="outline" class="field-full orcamento-field">
+    <mat-label>Orçamento (opcional)</mat-label>
+    <mat-icon matPrefix>savings</mat-icon>
+    <input matInput type="number" [formControl]="orcamentoControl" placeholder="0,00" step="0.01" />
+    @if (orcamentoControl.hasError('min') && orcamentoControl.touched) {
+    <mat-error>Valor inválido</mat-error>
+    }
+  </mat-form-field>
+
   <!-- Atalhos de mercados favoritos -->
   <section class="favoritos-section">
     <span class="favoritos-label">Acesso rápido</span>
@@ -21,7 +32,7 @@
   </section>
 
   <div class="ou-divider">
-    <span>ou digite outro mercado</span>
+    <span>ou digite o mercado</span>
   </div>
 
   <form class="form-card" [formGroup]="formMercado" (ngSubmit)="iniciarCompra()">
@@ -29,11 +40,9 @@
       <mat-label>Nome do mercado</mat-label>
       <mat-icon matPrefix>store</mat-icon>
       <input matInput formControlName="mercado" placeholder="Ex: Mercado Extra" />
-      @if (formMercado.get('mercado')?.hasError('required') && formMercado.get('mercado')?.touched)
-      {
+      @if (formMercado.get('mercado')?.hasError('required') && formMercado.get('mercado')?.touched) {
       <mat-error>Informe o nome do mercado</mat-error>
-      } @if (formMercado.get('mercado')?.hasError('minlength') &&
-      formMercado.get('mercado')?.touched) {
+      } @if (formMercado.get('mercado')?.hasError('minlength') && formMercado.get('mercado')?.touched) {
       <mat-error>Mínimo 3 caracteres</mat-error>
       }
     </mat-form-field>
@@ -106,10 +115,45 @@
   <!-- Rodapé com total e botão finalizar -->
   @if (compraAtiva()!.produtos.length > 0) {
   <footer class="compra-footer">
+
+    @if (percentualOrcamento() !== null) {
+    <!-- Com orçamento: mostra barra de progresso -->
+    <div class="orcamento-header">
+      <span class="orcamento-valores">
+        {{ total() | currency:'BRL' }}
+        <span class="orcamento-de">de {{ compraAtiva()!.orcamento | currency:'BRL' }}</span>
+      </span>
+      <span class="orcamento-percentual" [class.acima-do-orcamento]="percentualOrcamento()! > 100">
+        {{ percentualOrcamento()! | number:'1.0-0' }}%
+      </span>
+    </div>
+
+    <!-- [value] aceita 0-100 — limitamos a 100 visualmente, mas o percentual real pode passar -->
+    <!-- [color] muda a cor: 'primary' (azul) ou 'warn' (vermelho) -->
+    <mat-progress-bar
+      [value]="percentualOrcamento()! > 100 ? 100 : percentualOrcamento()!"
+      [color]="percentualOrcamento()! > 100 ? 'warn' : 'primary'"
+      class="orcamento-barra"
+    />
+
+    <div class="orcamento-restante">
+      @if (percentualOrcamento()! <= 100) {
+      <mat-icon>check_circle</mat-icon>
+      <span>Faltam {{ (compraAtiva()!.orcamento! - total()) | currency:'BRL' }}</span>
+      } @else {
+      <mat-icon class="icone-alerta">warning</mat-icon>
+      <span class="acima-do-orcamento">Ultrapassou {{ (total() - compraAtiva()!.orcamento!) | currency:'BRL' }}</span>
+      }
+    </div>
+
+    } @else {
+    <!-- Sem orçamento: mostra só o total -->
     <div class="total-row">
       <span class="total-label">Total</span>
       <span class="total-valor">{{ total() | currency : 'BRL' }}</span>
     </div>
+    }
+
     <button mat-flat-button class="btn-finalizar" (click)="finalizarCompra()">
       <mat-icon>check_circle</mat-icon>
       Finalizar Compra

@@ -1,13 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { CompraService } from '../../services/compra';
 import { DialogoConfirmacaoComponent } from '../../components/dialogo-confirmacao/dialogo-confirmacao';
 import { FormProduto } from '../../components/form-produto/form-produto';
@@ -24,7 +25,9 @@ import { Produto } from '../../models/compra.model';
     MatIconModule,
     MatDividerModule,
     CurrencyPipe,
+    DecimalPipe,
     FormProduto,
+    MatProgressBarModule,
   ],
   templateUrl: './compra-ativa.html',
   styleUrl: './compra-ativa.scss'
@@ -39,24 +42,36 @@ export class CompraAtiva {
   mercadosFavoritos = ['Tauste', 'Assaí', 'Shibatta', 'Carrefour', 'Nagumo', 'Semmar'];
   compraAtiva = this.compraService.getCompraAtiva();
   total = this.compraService.totalCompraAtiva;
+  percentualOrcamento = this.compraService.percentualOrcamento;
 
   // Signal que guarda qual produto está sendo editado no momento
   // null = modo "adicionar", Produto = modo "editar"
   produtoEditando = signal<Produto | null>(null);
 
+  // FormControl independente — compartilhado entre atalhos e formulário
+  orcamentoControl = new FormControl<number | null>(null, [Validators.min(0.01)]);
+
   formMercado: FormGroup = this.fb.group({
     mercado: ['', [Validators.required, Validators.minLength(3)]]
   });
 
+  // Lê o orçamento do FormControl compartilhado
+  private getOrcamento(): number | undefined {
+    const valor = this.orcamentoControl.value;
+    return valor ? Number(valor) : undefined;
+  }
+
   iniciarCompraDireta(mercado: string): void {
-    this.compraService.iniciarCompra(mercado);
+    this.compraService.iniciarCompra(mercado, this.getOrcamento());
+    this.orcamentoControl.reset();
   }
 
   iniciarCompra(): void {
     if (this.formMercado.invalid) return;
     const { mercado } = this.formMercado.value;
-    this.compraService.iniciarCompra(mercado);
+    this.compraService.iniciarCompra(mercado, this.getOrcamento());
     this.formMercado.reset();
+    this.orcamentoControl.reset();
   }
 
   // Recebe o evento (salvo) do form-produto

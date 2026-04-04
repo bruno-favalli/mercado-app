@@ -11,7 +11,7 @@
       <mat-icon>info_outline</mat-icon>
       <div>
         <strong>Compra em andamento</strong>
-        <p>Você tem uma compra ativa no {{ compraService.getCompraAtiva()()?.mercado }}</p>
+        <p>{{ compraService.getCompraAtiva()()?.mercado }} &mdash; {{ total() | currency:'BRL' }} adicionados</p>
       </div>
     </div>
     }
