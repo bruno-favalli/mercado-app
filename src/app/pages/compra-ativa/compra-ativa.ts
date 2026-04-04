@@ -10,6 +10,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { CompraService } from '../../services/compra';
+import { MercadosFavoritosService } from '../../services/mercados-favoritos';
 import { DialogoConfirmacaoComponent } from '../../components/dialogo-confirmacao/dialogo-confirmacao';
 import { FormProduto } from '../../components/form-produto/form-produto';
 import { Produto } from '../../models/compra.model';
@@ -39,10 +40,19 @@ export class CompraAtiva {
   private dialog = inject(MatDialog);
   compraService = inject(CompraService);
 
-  mercadosFavoritos = ['Tauste', 'Assaí', 'Shibatta', 'Carrefour', 'Nagumo', 'Semmar'];
+  favoritosService = inject(MercadosFavoritosService);
   compraAtiva = this.compraService.getCompraAtiva();
   total = this.compraService.totalCompraAtiva;
   percentualOrcamento = this.compraService.percentualOrcamento;
+
+  // Controla se a seção de favoritos está em modo de edição
+  modoEdicaoFavoritos = signal(false);
+
+  // FormControl para o input de novo mercado favorito
+  novoFavoritoControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(2)
+  ]);
 
   // Signal que guarda qual produto está sendo editado no momento
   // null = modo "adicionar", Produto = modo "editar"
@@ -59,6 +69,23 @@ export class CompraAtiva {
   private getOrcamento(): number | undefined {
     const valor = this.orcamentoControl.value;
     return valor ? Number(valor) : undefined;
+  }
+
+  toggleEdicaoFavoritos(): void {
+    // signal.update() com negação booleana: false→true, true→false
+    this.modoEdicaoFavoritos.update(v => !v);
+    // Limpa o input ao entrar/sair do modo edição
+    this.novoFavoritoControl.reset();
+  }
+
+  adicionarFavorito(): void {
+    if (this.novoFavoritoControl.invalid) return;
+    this.favoritosService.adicionar(this.novoFavoritoControl.value!);
+    this.novoFavoritoControl.reset();
+  }
+
+  removerFavorito(nome: string): void {
+    this.favoritosService.remover(nome);
   }
 
   iniciarCompraDireta(mercado: string): void {

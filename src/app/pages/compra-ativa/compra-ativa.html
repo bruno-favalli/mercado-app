@@ -20,15 +20,54 @@
 
   <!-- Atalhos de mercados favoritos -->
   <section class="favoritos-section">
-    <span class="favoritos-label">Acesso rápido</span>
-    <div class="favoritos-grid">
-      @for (mercado of mercadosFavoritos; track mercado) {
-      <button class="favorito-card" type="button" (click)="iniciarCompraDireta(mercado)">
-        <mat-icon>store</mat-icon>
-        <span>{{ mercado }}</span>
+    <div class="favoritos-header">
+      <span class="favoritos-label">Acesso rápido</span>
+      <!-- botão alterna entre "editar" e "concluído" conforme o modo -->
+      <button mat-button class="btn-editar-favoritos" type="button" (click)="toggleEdicaoFavoritos()">
+        <mat-icon>{{ modoEdicaoFavoritos() ? 'check' : 'edit' }}</mat-icon>
+        {{ modoEdicaoFavoritos() ? 'Concluído' : 'Editar' }}
       </button>
+    </div>
+
+    <div class="favoritos-grid">
+      @for (mercado of favoritosService.favoritos(); track mercado) {
+        @if (modoEdicaoFavoritos()) {
+        <!-- Modo edição: card com botão de remover -->
+        <div class="favorito-card editando">
+          <mat-icon>store</mat-icon>
+          <span>{{ mercado }}</span>
+          <button
+            type="button"
+            class="btn-remover-favorito"
+            (click)="removerFavorito(mercado)"
+            title="Remover {{ mercado }}"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        } @else {
+        <!-- Modo normal: card clicável para iniciar compra -->
+        <button class="favorito-card" type="button" (click)="iniciarCompraDireta(mercado)">
+          <mat-icon>store</mat-icon>
+          <span>{{ mercado }}</span>
+        </button>
+        }
       }
     </div>
+
+    <!-- Form de adicionar favorito — só aparece no modo edição -->
+    @if (modoEdicaoFavoritos()) {
+    <form class="form-novo-favorito" (ngSubmit)="adicionarFavorito()">
+      <mat-form-field appearance="outline" class="field-novo-favorito">
+        <mat-label>Novo mercado</mat-label>
+        <mat-icon matPrefix>add_business</mat-icon>
+        <input matInput [formControl]="novoFavoritoControl" placeholder="Ex: Atacadão" />
+      </mat-form-field>
+      <button mat-flat-button type="submit" class="btn-add-favorito" [disabled]="novoFavoritoControl.invalid">
+        <mat-icon>add</mat-icon>
+      </button>
+    </form>
+    }
   </section>
 
   <div class="ou-divider">

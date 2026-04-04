@@ -288,23 +288,44 @@
   .favoritos-section {
     margin-bottom: 8px;
   }
-  
+
+  .favoritos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
   .favoritos-label {
     font-size: 11px;
     font-weight: 500;
     letter-spacing: .07em;
     text-transform: uppercase;
     color: #999;
-    display: block;
-    margin-bottom: 10px;
   }
-  
+
+  .btn-editar-favoritos {
+    font-size: 0.8rem;
+    color: #666;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 8px;
+    min-width: unset;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+    }
+  }
+
   .favoritos-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
   }
-  
+
   .favorito-card {
     display: flex;
     flex-direction: column;
@@ -320,24 +341,84 @@
     font-size: 0.85rem;
     font-weight: 500;
     color: #333;
-  
+
     mat-icon {
       font-size: 28px;
       width: 28px;
       height: 28px;
       color: #2e7d32;
     }
-  
+
     &:hover {
       border-color: #2e7d32;
       background: #f1f8e9;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(46,125,50,0.12);
     }
-  
+
     &:active {
       transform: translateY(0);
     }
+
+    // Modo edição: não é clicável, tem posição relativa para o botão de fechar
+    &.editando {
+      cursor: default;
+      position: relative;
+      border-color: #ffccbc;
+      background: #fff8f6;
+
+      mat-icon:first-child {
+        color: #aaa;
+      }
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .btn-remover-favorito {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e53935;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: white;
+    }
+  }
+
+  .form-novo-favorito {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 12px;
+
+    .field-novo-favorito {
+      flex: 1;
+    }
+  }
+
+  .btn-add-favorito {
+    height: 56px;
+    width: 56px;
+    min-width: 56px;
+    background-color: #2e7d32 !important;
+    color: white !important;
+    flex-shrink: 0;
   }
   
   .ou-divider {
